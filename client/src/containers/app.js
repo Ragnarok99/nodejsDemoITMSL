@@ -2,6 +2,9 @@ import React, { Component } from "react";
 import styles from "./styles.css";
 import { OutlineModal } from "boron";
 import ReactCSSTransitionGroup from "react-addons-css-transition-group";
+import _ from 'lodash';
+import { ToastContainer, toast } from 'react-toastify';
+
 
 import api from "../utils/api";
 
@@ -29,10 +32,21 @@ class App extends Component {
     });
   }
 
+  notify = (message, type) => toast[type](message);
+  
   render() {
     let { valueInputTask, tasks, selectedTask, isUpdating } = this.state;
     return (
       <div>
+        <ToastContainer 
+          position="top-right"
+          type="default"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          pauseOnHover
+        />
         <div className={`${styles.jumbotronLevel} jumbotron`}>
           <div className="container">
             <h1 className="display-3">To-Do App!</h1>
@@ -67,7 +81,7 @@ class App extends Component {
         </div>
         <div className="container">
           <header>
-            <h4>Here you've all your tasks!</h4>
+            <h4 className={`${styles.titleTasksList}`}>Here you've all your tasks!</h4>
             <ul className={`${styles.itemsContainer} card`}>
               <ReactCSSTransitionGroup
                 transitionName="fade"
@@ -89,6 +103,10 @@ class App extends Component {
                   ))}
               </ReactCSSTransitionGroup>
             </ul>
+
+            {tasks.length === 0 && (
+              <h4 className={`${styles.noTasksMassage}`}>Wow!! you already finished all your tasks!! congrats buddy ☻</h4>
+            )}
             <OutlineModal
               onHide={this.hideModal}
               className={`${styles.modalContainer}`}
@@ -176,10 +194,7 @@ class App extends Component {
     e.preventDefault();
     let { selectedTask, tasks } = this.state;
 
-    console.log(selectedTask);
-
     const response = await api.tasks.updateTask({ ...selectedTask });
-    console.log(response);
     if (response.ok === 1) {
       const newTasks = tasks.map(task => {
         if (task._id === selectedTask._id) {
@@ -203,7 +218,7 @@ class App extends Component {
   async handleDeleteTask() {
     let { selectedTask } = this.state;
     const response = await api.tasks.deleteTask(selectedTask._id);
-    console.log(response);
+
     if (response.n > 0) {
       //if deleted
       this.setState(
@@ -230,17 +245,25 @@ class App extends Component {
   async handleSubmit(e) {
     let { valueInputTask } = this.state;
     e.preventDefault();
-
+    if(valueInputTask.trim() === ''){
+      this.notify("The task name is required, please provide one :^)", "error")
+    }else{
     let response = await api.tasks.addNew({
       title: valueInputTask,
-      completed: true,
+      completed: false,
       createdAt: Date.now()
     });
-    console.log(response);
+    let newTasksObject = this.state.tasks;
+    newTasksObject.unshift(response);
 
     this.setState({
-      tasks: this.state.tasks.concat(response)
+      tasks: newTasksObject,
+      valueInputTask: ''
+    }, () => {
+      this.notify(`Task ${valueInputTask} added! `, "success")
+      
     });
+  }
   }
 
   hideModal() {
@@ -249,10 +272,6 @@ class App extends Component {
       selectedTask: {},
       isUpdating: false
     });
-  }
-
-  callback(event) {
-    console.log(event);
   }
 }
 

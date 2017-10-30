@@ -24,7 +24,17 @@
   opacity: 1;
   transition: opacity 1000ms;
 }
+input[type="checkbox"]{
+  width: 25px;
+  height: 25px;
+  cursor: pointer;
+  margin: 0 10px;
 
+}
+
+.checkbox {
+  font-size: 30px;
+}
 @media only screen and (max-width: 991px) {
 
     .container{
@@ -32,3 +42,4 @@
     }
 
 }
+

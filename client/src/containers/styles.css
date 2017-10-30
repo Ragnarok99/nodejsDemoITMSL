@@ -27,14 +27,15 @@
 .updateIcon {
   border-radius: 50%;
   padding: 15px;
-  background-color: #21635a;
+  background-color: #25ab6d;
   color: white;
-  margin: 20px;
+  margin: 7px 12px;
   transition: all 0.3s;
 }
 
 .updateIcon:hover {
   color: black;
+  cursor: pointer;
   background-color: lightgray;
 }
 
@@ -45,13 +46,14 @@
   color: white;
 
 }
+.itemsContainer > span > li:hover {
+  background-color: lightgray;
+  color: black;
+  cursor: pointer;
+}
 
 .titleSearch {
   color: rgb(125, 125, 125);
-}
-
-.modalContainer {
-
 }
 
 .modalButtons {
@@ -63,6 +65,12 @@
   background: #C94E50;
   color: #FFFFFF;
   border: none;
+}
+
+.modalButtons:hover{
+  cursor: pointer;
+  box-shadow: inset 1200px 1053px 1061px 2199px rgba(58, 58, 70, 0.55);  
+
 }
 
 .updateInput{
@@ -80,5 +88,10 @@
 
 .inputTitle:focus {
   outline: none;
+}
+
+.titleTasksList, .noTasksMassage {
+  color: rgb(125, 125, 125);
+  text-align: center;
 }
 
